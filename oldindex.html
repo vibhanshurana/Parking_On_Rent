@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>Parking on Rent</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+body {font-family: "Lato", sans-serif}
+.mySlides {display: none}
+</style>
+<body>
+
+<!-- Navbar -->
+<div class="w3-top"">
+  <div class="w3-bar w3-black w3-card">
+    <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+    <a href="#" class="w3-bar-item w3-button w3-padding-large">HOME</a>
+    <a href="#band1" class="w3-bar-item w3-button w3-padding-large w3-hide-small">MAP</a>
+    <a href="#tour" class="w3-bar-item w3-button w3-padding-large w3-hide-small">PARKING LIST</a>
+    <a href="#band" class="w3-bar-item w3-button w3-padding-large w3-hide-small">DEVELOPERS</a>
+    <a href="#contact" class="w3-bar-item w3-button w3-padding-large w3-hide-small">CONTACT</a>
+    <div class="w3-dropdown-hover w3-hide-small">
+      <button class="w3-padding-large w3-button" title="More">MORE <i class="fa fa-caret-down"></i></button>     
+      <div class="w3-dropdown-content w3-bar-block w3-card-4">
+        <a href="#" class="w3-bar-item w3-button">ACCOUNT</a>
+        <a href="#" class="w3-bar-item w3-button">GET RFID</a>
+        <a href="#" class="w3-bar-item w3-button">HELP</a>
+      </div>
+    </div>
+    <a href="javascript:void(0)" class="w3-padding-large w3-hover-red w3-hide-small w3-right"><i class="fa fa-search"></i></a>
+  </div>
+</div>
+
+<!-- Navbar on small screens (remove the onclick attribute if you want the navbar to always show on top of the content when clicking on the links) -->
+<div id="navDemo" class="w3-bar-block w3-black w3-hide w3-hide-large w3-hide-medium w3-top" style="margin-top:46px">
+  <a href="#band1" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">MAP</a>
+  <a href="#tour" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">PARKING LIST</a>
+  <a href="#band" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">DEVELOPERS</a>
+  <a href="#contact" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">CONTACT</a>
+  <a href="#" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">MERCH</a>
+</div>
+
+<!-- Page content -->
+<div class="w3-content" style="max-width:2000px;margin-top:30px">
+
+  <!-- Automatic Slideshow Images -->
+  <div class="mySlides w3-display-container w3-center">
+    <img src="image1.jpg" style="width:100%">
+    <div class="w3-display-bottommiddle w3-container w3-text-white w3-padding-32 w3-hide-small">
+      <h3></h3>
+      <p><b></b></p>   
+    </div>
+  </div>
+  <!--<div class="mySlides w3-display-container w3-center">
+    <img src="/w3images/ny.jpg" style="width:100%">
+    <div class="w3-display-bottommiddle w3-container w3-text-white w3-padding-32 w3-hide-small">
+      <h3>New York</h3>
+      <p><b>The atmosphere in New York is lorem ipsum.</b></p>    
+    </div>
+  </div>
+  <div class="mySlides w3-display-container w3-center">
+    <img src="/w3images/chicago.jpg" style="width:100%">
+    <div class="w3-display-bottommiddle w3-container w3-text-white w3-padding-32 w3-hide-small">
+      <h3>Chicago</h3>
+      <p><b>Thank you, Chicago - A night we won't forget.</b></p>    
+    </div>
+  </div> -->
+
+  <!-- The Band Section -->
+  <div class="w3-container w3-content w3-center w3-padding-64" style="max-width:1800px;height:650px" id="band1">
+	
+	<script src="https://www.gstatic.com/firebasejs/live/3.1/firebase.js"></script>
+    <script>
+      //Global Variable
+      var fruits = [];
+      function myFunction() {
+    
+      var map1 = document.getElementById("map1"); 
+      var map2 = document.getElementById("map2"); 
+      var map3 = document.getElementById("map3"); 
+      var map4 = document.getElementById("map4"); 
+    
+      var config = {
+        apiKey: "AIzaSyBnv3e5FaZWeoLKCWUW1LuQYnS3rbylCFc",
+        authDomain: "myparking-7e556.firebaseapp.com",
+        databaseURL: "myparking-7e556.firebaseio.com",
+        storageBucket: "myparking-7e556.appspot.com",
+        messagingSenderId: "141182312829"
+      };/*
+	   apiKey: "AIzaSyA_GfH36smQ1dHhn4IBERQJZIzBlgQ5M3k",
+  	   authDomain: "parking-asr.firebaseapp.com",
+ 	   databaseURL: "parking-asr.firebaseio.com",
+ 	   storageBucket: "parking-asr.appspot.com",
+ 	   messagingSenderId:"599740138021"
+ 		 };*/
+      console.log("HELLO"); 
+      firebase.initializeApp(config);
+      const dbRefObject = firebase.database().ref().child('Device');
+      var myTable = "";
+      var myData = "";
+      //var fruits = [];
+      var text = "";
+      dbRefObject.on('value', snap => {
+         myTable = JSON.stringify(snap.val(), null, 1);
+         snap.forEach(function(data) {
+          
+          data.forEach(function(field) {
+            if(field.key === "Available")
+              text = field.val();
+            else
+              text = text + "/" + field.val();
+            });
+            fruits.push(text);
+          });
+        console.log(myTable);
+    
+        /*map1.innerText = fruits[0];
+        map2.innerText = fruits[1];
+        map3.innerText = fruits[2];
+        map4.innerText = fruits[3];
+          */
+      });
+      //fireHeading.innerText = fruits; 
+      }
+    </script>
+    <script>window.myFunction();</script>
+
+
+
+
+
+
+
+	<script>
+	var avail=[0,0,5,9,7,6];
+	var total=[25,30,50,40,45];
+
+	</script>
+    <script>
+        function detectBrowser() {
+          //myFunction
+          
+
+
+            var useragent = navigator.userAgent;
+            var mapdiv = document.getElementById("map");
+            if (useragent.indexOf('iPhone') != -1 || useragent.indexOf('Android') != -1) {
+                mapdiv.style.width = '100%';
+                mapdiv.style.height = '100%';
+            } else {
+                mapdiv.style.width = '600px';
+                mapdiv.style.height = '800px';
+            }
+        }
+        var myLatLng;
+        var latit;
+        var longit;
+        function geoSuccess(position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+            var directionsService = new google.maps.DirectionsService;
+            var directionsDisplay = new google.maps.DirectionsRenderer;
+            myLatLng = {
+                lat: latitude,
+                lng: longitude
+            };
+            var mapProp = {
+                //            center: new google.maps.LatLng(latitude, longitude), // puts your current location at the centre of the map,
+                zoom: 15,
+                mapTypeId: 'roadmap',
+            };
+            var map = new google.maps.Map(document.getElementById("band1"), mapProp);
+            var directionsService = new google.maps.DirectionsService;
+            var directionsDisplay = new google.maps.DirectionsRenderer;
+            //call renderer to display directions
+            directionsDisplay.setMap(map);
+            var bounds = new google.maps.LatLngBounds();
+            //        var mapOptions = {
+            //            mapTypeId: 'roadmap'
+            //        };
+            // Multiple Markers
+            var marker = new google.maps.Marker({
+
+              //Data From Firebase
+              //console.log("Firebase");
+
+
+
+                position: myLatLng,
+                map: map,
+                title: 'My location'
+            });
+			
+            var markers = [
+                ['Parking D1', 21.249688, 81.603884],
+                ['Parking D2', 21.242608, 81.611158],
+                ['Parking D3', 21.242048,81.602081],
+                ['Parking D4', 21.240822, 81.62677],
+                ['Parking D5', 21.245982, 81.642778],
+               /* ['Roasted Brown', 53.344813, -6.264707],
+                ['Kaph', 53.342599, -6.263272],
+                ['Fallon & Byrne', 53.343151, -6.263287],
+                ['Clement & Pekoe', 53.341534, -6.26276],*/
+                ['my current location', latitude, longitude]
+            ];
+            // Info Window Content
+            var infoWindowContent = [
+                ['<div class="info_content">' +
+                    '<h3>Parking D1</h3>' +
+                    fruits[0]+'/'+total[0]+
+                    '</div>'
+                ],
+                ['<div class="info_content">' +
+                    '<h3>Parking D2</h3>'+
+                    fruits[1]+'/'+total[1]+
+                    '</div>'
+                ],
+                ['<div class="info_content">' +
+                    '<h3>' + markers[3][0] + '</h3>' +
+                    fruits[2]+'/'+total[2]+
+                    '</div>'
+                ],
+                ['<div class="info_content">' +
+                    '<h3>Parking D3</h3>' +
+                    fruits[3]+'/'+total[3]+
+                    '</div>'
+                ],
+                ['<div class="info_content">' +
+                    '<h3>Parking D5</h3>' +
+                    fruits[4]+'/'+total[4]+
+                    '</div>'
+                ],
+              /*  ['<div class="info_content">' +
+                    '<h3>Kaph</h3>' +
+                    '<p>31 Drury St, Dublin 2</p>' +
+                    '<img src="images/kaph-6.jpg" width="200" height="200">' +
+                    '</div>'
+                ],
+                ['<div class="info_content">' +
+                    '<h3>Fallon & Byrne</h3>' +
+                    '<p>17 Exchequer St, Dublin 2</p>' +
+                    '<img src="images/fallonandbyrne.jpg" width="200" height="200">' +
+                    '</div>'
+                ],
+                ['<div class="info_content">' +
+                    '<h3>Clement & Pekoe</h3>' +
+                    '<p>50 South William St, Dublin 2</p>' +
+                    '<img src="images/ClementPekoe.jpg" width="200" height="200">' +
+                    '</div>'
+                ]*/
+            ];
+            // Display multiple markers on a map
+            var infoWindow = new google.maps.InfoWindow(),
+                marker, i;
+            // Loop through our array of markers & place each one on the map
+            for (i = 0; i < markers.length; i++) {
+                var position = new google.maps.LatLng(markers[i][1], markers[i][2]);
+                bounds.extend(position);
+                marker = new google.maps.Marker({
+                    position: position,
+                    map: map,
+                    title: markers[i][0]
+                });
+                // Allow each marker to have an info window
+                google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                    return function() {
+                        infoWindow.setContent(infoWindowContent[i][0]);
+                        infoWindow.open(map, marker);
+                        latit = marker.getPosition().lat();
+                        longit = marker.getPosition().lng();
+                        // console.log("lat: " + latit);
+                        // console.log("lng: " + longit);
+                    }
+                })(marker, i));
+                marker.addListener('click', function() {
+                    directionsService.route({
+                        // origin: document.getElementById('start').value,
+                        origin: myLatLng,
+                        // destination: marker.getPosition(),
+                        destination: {
+                            lat: latit,
+                            lng: longit
+                        },
+                        travelMode: 'DRIVING'
+                    }, function(response, status) {
+                        if (status === 'OK') {
+                            directionsDisplay.setDirections(response);
+                        } else {
+                            window.alert('Directions request failed due to ' + status);
+                        }
+                    });
+                });
+                // Automatically center the map fitting all markers on the screen
+                map.fitBounds(bounds);
+            }
+        }
+        // function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+        //     directionsService.route({
+        //         // origin: document.getElementById('start').value,
+        //         origin: myLatLng,
+        //         destination: marker.getPosition(),
+        //         travelMode: 'DRIVING'
+        //     }, function(response, status) {
+        //         if (status === 'OK') {
+        //             console.log('all good');
+        //             directionsDisplay.setDirections(response);
+        //         } else {
+        //             window.alert('Directions request failed due to ' + status);
+        //         }
+        //     });
+        // }
+        function geoError() {
+            alert("Geocoder failed.");
+        }
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(geoSuccess, geoError);
+                // alert("Geolocation is supported by this browser.");
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+    </script>
+
+<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCc7FZQ6jG2VcxnxbMNdkPFFzrUsJxq-ys&callback=getLocation"></script>
+	</div>
+  
+
+  <!-- The Tour Section -->
+  <div class="w3-black" id="tour">
+    <div class="w3-container w3-content w3-padding-64" style="max-width:800px">
+      <h2 class="w3-wide w3-center">AVAILABLE PARKING POINT</h2>
+      <p class="w3-opacity w3-center"><i>Park near without Fear!</i></p><br>
+		
+       <table>
+       	<tr>
+        	<th> PARKING NO.</th>
+            <th> LOCATION OF PARKING</th>
+            <th> TOTAL SPOTS</th>
+        </tr>
+        <tr>
+        	<td>P1</td>
+            <td>NIT Raipur, GE Road, Raipur</td>
+            <td>50</td>
+        </tr>
+        <tr>
+        	<td>P2</td>
+            <td>Central Library, GE Road, Raipur</td>
+            <td>30</td>
+        </tr>
+        <tr>
+        	<td>P3</td>
+            <td>Shastri Complex, Amapara, Raipur</td>
+            <td>35</td>
+        </tr>
+        <tr>
+        	<td>P4</td>
+            <td>City Center, Near Pandri Bus Stand, Raipur</td>
+            <td>70</td>
+        </tr>
+        <tr>
+        	<td>P5</td>
+            <td>Pt. Ravishankar university, GE Road, Raipur</td>
+            <td>55</td>
+        </tr>    
+        </table> 
+     <!-- <ul class="w3-ul w3-border w3-white w3-text-grey">
+        <li class="w3-padding">September <span class="w3-tag w3-red w3-margin-left">Sold out</span></li>
+        <li class="w3-padding">October <span class="w3-tag w3-red w3-margin-left">Sold out</span></li>
+        <li class="w3-padding">November <span class="w3-badge w3-right w3-margin-right">3</span></li>
+      </ul>
+
+      <div class="w3-row-padding w3-padding-32" style="margin:0 -16px">
+        <div class="w3-third w3-margin-bottom">
+          <img src="/w3images/newyork.jpg" alt="New York" style="width:100%" class="w3-hover-opacity">
+          <div class="w3-container w3-white">
+            <p><b>New York</b></p>
+            <p class="w3-opacity">Fri 27 Nov 2016</p>
+            <p>Praesent tincidunt sed tellus ut rutrum sed vitae justo.</p>
+            <button class="w3-button w3-black w3-margin-bottom" onclick="document.getElementById('ticketModal').style.display='block'">Buy Tickets</button>
+          </div>
+        </div>
+        <div class="w3-third w3-margin-bottom">
+          <img src="/w3images/paris.jpg" alt="Paris" style="width:100%" class="w3-hover-opacity">
+          <div class="w3-container w3-white">
+            <p><b>Paris</b></p>
+            <p class="w3-opacity">Sat 28 Nov 2016</p>
+            <p>Praesent tincidunt sed tellus ut rutrum sed vitae justo.</p>
+            <button class="w3-button w3-black w3-margin-bottom" onclick="document.getElementById('ticketModal').style.display='block'">Buy Tickets</button>
+          </div>
+        </div>
+        <div class="w3-third w3-margin-bottom">
+          <img src="/w3images/sanfran.jpg" alt="San Francisco" style="width:100%" class="w3-hover-opacity">
+          <div class="w3-container w3-white">
+            <p><b>San Francisco</b></p>
+            <p class="w3-opacity">Sun 29 Nov 2016</p>
+            <p>Praesent tincidunt sed tellus ut rutrum sed vitae justo.</p>
+            <button class="w3-button w3-black w3-margin-bottom" onclick="document.getElementById('ticketModal').style.display='block'">Buy Tickets</button>
+          </div>
+        </div>
+      </div>-->
+    </div>
+  </div>
+
+  <!-- Ticket Modal -->
+  <!--<div id="ticketModal" class="w3-modal">
+    <div class="w3-modal-content w3-animate-top w3-card-4">
+      <header class="w3-container w3-teal w3-center w3-padding-32"> 
+        <span onclick="document.getElementById('ticketModal').style.display='none'" 
+       class="w3-button w3-teal w3-xlarge w3-display-topright">×</span>
+        <h2 class="w3-wide"><i class="fa fa-suitcase w3-margin-right"></i>Tickets</h2>
+      </header>
+      <div class="w3-container">
+        <p><label><i class="fa fa-shopping-cart"></i> Tickets, $15 per person</label></p>
+        <input class="w3-input w3-border" type="text" placeholder="How many?">
+        <p><label><i class="fa fa-user"></i> Send To</label></p>
+        <input class="w3-input w3-border" type="text" placeholder="Enter email">
+        <button class="w3-button w3-block w3-teal w3-padding-16 w3-section w3-right">PAY <i class="fa fa-check"></i></button>
+        <button class="w3-button w3-red w3-section" onclick="document.getElementById('ticketModal').style.display='none'">Close <i class="fa fa-remove"></i></button>
+        <p class="w3-right">Need <a href="#" class="w3-text-blue">help?</a></p>
+      </div>
+    </div>
+  </div>-->
+  
+  <div class="w3-container w3-content w3-center w3-padding-64" style="max-width:2000px;height:650px" id="band">
+  <h2 class="w3-wide">DEVELOPERS</h2>
+    <p class="w3-opacity"><i>Co-Operation is a key to success...</i></p>
+    <p class="w3-justify"></p>
+    <div class="w3-row w3-padding-32">
+      <div class="w3-third">
+        <p><span class="w3-tag w3-red w3-margin-left">VIBHANSHU RANA</span></p>
+        <img src="rana.jpg" class="w3-round w3-margin-bottom" alt="Vibhanshu Rana" style="width:60%">
+      </div>
+      <div class="w3-third">
+        <p><span class="w3-tag w3-red w3-margin-left">GURLEEN KHANNA</span></p>
+        <img src="gk.jpg" class="w3-round w3-margin-bottom" alt="Gurleen Khanna" style="width:60%">
+      </div>
+      <div class="w3-third">
+        <p><span class="w3-tag w3-red w3-margin-left">SHASHANK GAUTAM</span></p>
+        <img src="susu.jpg" class="w3-round" alt="Shashank Gautam" style="width:60%">
+      </div>
+      <div class="w3-third">
+        <p><span class="w3-tag w3-red w3-margin-left">ANUJ SINGH RATHORE</span></p>
+        <img src="anuj.jpg" class="w3-round" alt="Anuj Singh Rathore" style="width:60%">
+      </div>   
+     </div>
+   </div>
+   
+  <!-- The Contact Section -->
+  <div class=w3-black>
+  <div class="w3-container w3-content w3-padding-64" style="max-width:1000px;height:650px" id="contact">
+    <h2 class="w3-wide w3-center">CONTACT</h2>
+    <p class="w3-opacity w3-center"><i>Fan? Drop a note!</i></p>
+    <div class="w3-row w3-padding-32">
+      <div class="w3-col m6 w3-large w3-margin-bottom">
+        <i class="fa fa-map-marker" style="width:30px"></i>NIT RAIPUR<br>
+        <i class="fa fa-phone" style="width:30px"></i> Phone: +91 9654123658<br>
+        <i class="fa fa-envelope" style="width:30px"> </i> Email: contact@parkingonrent.com<br>
+      </div>
+      <div class="w3-col m6">
+        <form action="/action_page.php" target="_blank">
+          <div class="w3-row-padding" align="left" style="margin:0 -16px 8px -16px">
+            <div class="w3-half">
+              <input class="w3-input w3-border" type="text" placeholder="Name" required name="Name">
+            </div>
+            <div class="w3-half">
+              <input class="w3-input w3-border" type="text" placeholder="Email" required name="Email">
+            </div>
+          </div>
+          <input class="w3-input w3-border" type="text" placeholder="Message" required name="Message">
+          <button class="w3-button w3-black w3-section w3-right" type="submit">SEND</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  </div>
+<!-- End Page Content -->
+</div>
+
+<!-- Image of location/map -->
+<img src="/w3images/map.jpg" class="w3-image w3-greyscale-min" style="width:100%">
+
+<!-- Footer -->
+<footer class="w3-container w3-padding-64 w3-center w3-opacity w3-light-grey w3-xlarge">
+  <i class="fa fa-facebook-official w3-hover-opacity"></i>
+  <i class="fa fa-instagram w3-hover-opacity"></i>
+  <i class="fa fa-snapchat w3-hover-opacity"></i>
+  <i class="fa fa-pinterest-p w3-hover-opacity"></i>
+  <i class="fa fa-twitter w3-hover-opacity"></i>
+  <i class="fa fa-linkedin w3-hover-opacity"></i>
+  <p class="w3-medium">All right Reserved<br><i>"Parking On Rent"</i> &nbsp;</p>
+</footer>
+
+<script>
+// Automatic Slideshow - change image every 4 seconds
+var myIndex = 0;
+carousel();
+
+function carousel() {
+    var i;
+    var x = document.getElementsByClassName("mySlides");
+    for (i = 0; i < x.length; i++) {
+       x[i].style.display = "none";  
+    }
+    myIndex++;
+    if (myIndex > x.length) {myIndex = 1}    
+    x[myIndex-1].style.display = "block";  
+    setTimeout(carousel, 4000);    
+}
+
+// Used to toggle the menu on small screens when clicking on the menu button
+function myFunction() {
+    var x = document.getElementById("navDemo");
+    if (x.className.indexOf("w3-show") == -1) {
+        x.className += " w3-show";
+    } else { 
+        x.className = x.className.replace(" w3-show", "");
+    }
+}
+
+// When the user clicks anywhere outside of the modal, close it
+var modal = document.getElementById('ticketModal');
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+</script>
+
+
+<script>
+// The Cloud Functions for Firebase SDK to create Cloud Functions and setup triggers.
+const functions = require('firebase-functions');
+
+// The Firebase Admin SDK to access the Firebase Realtime Database.
+const admin = require('firebase-admin');
+admin.initializeApp();
+var db = admin.database();
+ 
+
+
+
+exports.changeStatusWrite = functions.database.ref('/RFID/{rfid}/Flag')
+    .onWrite((change, contex) => {
+
+        // Grab the current value of what was written to the Realtime Database.
+        const id = contex.params.rfid;
+
+        var updateStatus;
+        var device_id;
+        var flag;
+        var ref = db.ref('RFID');
+
+        var status;
+        // Attach an asynchronous callback to read the data at our posts reference
+        ref.orderByKey().equalTo(id).on("value", function(snapshot) {
+            snapshot.forEach(function(data) {
+                data.forEach(function(field) {
+                   // console.log("field " + field.key + " value " + field.val());
+                if(String(field.key) === "Status"){
+                    status=field.val();
+                } 
+                if(String(field.key) === "Device"){
+                    device_id=field.val();
+                    //console.log("device_id " + device_id);
+                } 
+                if(String(field.key) === "Flag"){
+                    flag=field.val();
+                    //console.log("device_id " + device_id);
+				} 
+                });
+              });
+
+		}, function (errorObject) {
+            console.log("The read failed: " + errorObject.code);
+          });
+          console.log("MyStatus "+ status);
+
+
+          //If Flag NOT 0
+          if(flag === 1){
+          
+          //const temp_id=1;
+          //Update Device Id -----------
+          //var Device_ref = db.ref('AVL');
+          var upvotesRef = db.ref('/Device/'+ device_id + '/Available');
+
+        if(status === 1){
+            updateStatus = 0;
+            upvotesRef.transaction(function (current_value) {
+                return (current_value || 0) + 1;
+            });
+        }
+        else{
+            updateStatus = 1;
+            upvotesRef.transaction(function (current_value) {
+                return (current_value || 0) - 1;
+            });
+        }
+
+        console.log("updateStatus "+ updateStatus);
+
+        //update Status
+        var statusRef = db.ref('/RFID/'+ id + '/Status');
+        statusRef.transaction(function (current_value) {
+            return updateStatus;
+        });
+
+        return change.after.ref.parent.child('Flag').set(0);
+        }
+        else{                       //If Flag is 0
+            return;
+        }
+    })
+</script>
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+	$('a[href*="#"]')
+  // Remove links that don't actually link to anything
+  .not('[href="#"]')
+  .not('[href="#0"]')
+  .click(function(event) {
+    // On-page links
+    if (
+      location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') 
+      && 
+      location.hostname == this.hostname
+    ) {
+      // Figure out element to scroll to
+      var target = $(this.hash);
+      target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+      // Does a scroll target exist?
+      if (target.length) {
+        // Only prevent default if animation is actually gonna happen
+        event.preventDefault();
+        $('html, body').animate({
+          scrollTop: target.offset().top
+        }, 1000, function() {
+          // Callback after animation
+          // Must change focus!
+          var $target = $(target);
+          $target.focus();
+          if ($target.is(":focus")) { // Checking if the target was focused
+            return false;
+          } else {
+            $target.attr('tabindex','-1'); // Adding tabindex for elements not focusable
+            $target.focus(); // Set focus again
+          };
+        });
+      }
+    }
+  });
+  </script>
+	
+
+</body>
+</html>

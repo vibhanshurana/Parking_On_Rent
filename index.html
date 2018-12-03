@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>Parking on Rent
+</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="image/car.ico">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
+<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCc7FZQ6jG2VcxnxbMNdkPFFzrUsJxq-ys&callback=getLocation"></script>
+<script src="js/functions.js"></script>
+<script type="text/javascript" src="js/map_function.js"></script>
+<!--<script src="https://www.gstatic.com/firebasejs/live/3.1/firebase.js"></script>-->
+<style>
+body {font-family: "Lato", sans-serif}
+.mySlides {display: none}
+</style>
+<body onload="myFunction()">
+
+<!-- Navbar -->
+<div class="top"">
+  <div class="bar black card">
+    <a class="bar-item button padding-large hide-medium hide-large right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+    <a href="#" class="bar-item button padding-large">HOME</a>
+    <a href="#band1" class="bar-item button padding-large hide-small">MAP</a>
+    <a href="#tour" class="bar-item button padding-large hide-small">PARKING LIST</a>
+    <a href="#band" class="bar-item button padding-large hide-small">DEVELOPERS</a>
+    <a href="#contact" class="bar-item button padding-large hide-small">CONTACT</a>
+    <div class="dropdown-hover hide-small">
+      <button class="padding-large button" title="More">MORE <i class="fa fa-caret-down"></i></button>     
+      <div class="dropdown-content bar-block card-4">
+        <a href="#" class="bar-item button">ACCOUNT</a>
+        <a href="#" class="bar-item button">GET RFID</a>
+        <a href="#" class="bar-item button">HELP</a>
+      </div>
+    </div>
+    <a href="javascript:void(0)" class="padding-large hover-red hide-small right"><i class="fa fa-search"></i></a>
+  </div>
+</div>
+
+<!-- Navbar on small screens (remove the onclick attribute if you want the navbar to always show on top of the content when clicking on the links) -->
+<div id="navDemo" class="bar-block black hide hide-large hide-medium top" style="margin-top:46px">
+  <a href="#band1" class="bar-item button padding-large" onclick="myFunction()">MAP</a>
+  <a href="#tour" class="bar-item button padding-large" onclick="myFunction()">PARKING LIST</a>
+  <a href="#band" class="bar-item button padding-large" onclick="myFunction()">DEVELOPERS</a>
+  <a href="#contact" class="bar-item button padding-large" onclick="myFunction()">CONTACT</a>
+</div>
+
+<!-- Page content -->
+<div class="content" style="max-width:2000px;margin-top:30px">
+
+  <!-- Automatic Slideshow Images -->
+  <div class="mySlides display-container center">
+    <img src="image/banner1.jpg" style="width:100%">
+    <div class="display-bottommiddle container text-white padding-32 hide-small">
+      <h3></h3>
+      <p><b></b></p>   
+    </div>
+  </div>
+  <div class="mySlides display-container center">
+    <img src="image/banner2.jpg" style="width:100%">
+  </div>
+  <div class="mySlides display-container center">
+    <img src="image/banner3.jpg" style="width:100%">
+  </div>
+
+  <!-- The Band Section -->
+  <div class="container content center padding-64" style="max-width:1800px;height:650px" id="band1">
+	<!--map goes here-->
+      
+  </div>
+  
+
+  <!-- The Tour Section -->
+  <div class="black" id="tour">
+    <div class="container content padding-64" style="max-width:800px">
+      <h2 class="wide center">AVAILABLE PARKING POINT</h2>
+      <p class="opacity center"><i>Park near without Fear!</i></p><br>
+		
+       <table>
+       	<tr>
+        	<th> PARKING NO.</th>
+            <th> LOCATION OF PARKING</th>
+            <th> TOTAL SPOTS</th>
+			<th> CURRENT AVAILABILITY</th>
+        </tr>
+        <tr>
+        	<td>P1</td>
+            <td>NIT Raipur, GE Road, Raipur</td>
+            <td>50</td>
+			<td><p id="map1"></p></td>
+			
+        </tr>
+        <tr>
+        	<td>P2</td>
+            <td>Central Library, GE Road, Raipur</td>
+            <td>30</td>
+			<td><p id="map2"></p></td>
+        </tr>
+        <tr>
+        	<td>P3</td>
+            <td>Shastri Complex, Amapara, Raipur</td>
+            <td>70</td>
+			<td><p id="map3"></p></td>
+        </tr>
+        <tr>
+        	<td>P4</td>
+            <td>City Center, Near Pandri Bus Stand, Raipur</td>
+            <td>35</td>
+			<td><p id="map4"></p></td>
+        </tr>
+        <tr>
+        	<td>P5</td>
+            <td>Pt. Ravishankar university, GE Road, Raipur</td>
+            <td>55</td>
+			<td><p id="map5"></p></td>
+        </tr>    
+        </table> 
+    </div>
+  </div>
+  <!-- DEVELOPERS section -->
+  <div class="container content center padding-64" style="max-width:2000px;height:650px" id="band">
+  <h2 class="wide">DEVELOPERS</h2>
+    <p class="opacity"><i>Co-Operation is a key to success...</i></p>
+    <p class="justify"></p>
+    <div class="row padding-32">
+      <div class="third">
+        <p><span class="tag red margin-left">VIBHANSHU RANA</span></p>
+        <img src="image/rana.jpg" class="round margin-bottom" alt="Vibhanshu Rana" style="width:60%">
+      </div>
+      <div class="third">
+        <p><span class="tag red margin-left">GURLEEN KHANNA</span></p>
+        <img src="image/gk.jpg" class="round margin-bottom" alt="Gurleen Khanna" style="width:60%">
+      </div>
+      <div class="third">
+        <p><span class="tag red margin-left">SHASHANK GAUTAM</span></p>
+        <img src="image/susu.jpg" class="round" alt="Shashank Gautam" style="width:60%">
+      </div>
+      <div class="third">
+        <p><span class="tag red margin-left">ANUJ SINGH RATHORE</span></p>
+        <img src="image/anuj.jpg" class="round" alt="Anuj Singh Rathore" style="width:60%">
+      </div>   
+     </div>
+   </div>
+   
+  <!-- The Contact Section -->
+  <div class=black>
+  <div class="container content padding-64" style="max-width:1000px" id="contact">
+    <h2 class="wide center">CONTACT</h2>
+    <p class="opacity center"><i>Fan? Drop a note!</i></p><br><br><br>
+    <div class="row padding-32">
+      <div class="col m6 large margin-bottom">
+        <i class="fa fa-map-marker" style="width:30px"></i>NIT RAIPUR<br>
+        <i class="fa fa-phone" style="width:30px"></i> Phone: +91 9654123658<br>
+        <i class="fa fa-envelope" style="width:30px"> </i> Email: contact@parkingonrent.com<br>
+      </div>
+      <div class="col m6">
+        <form action="/action_page.php" target="_blank">
+          <div class="row-padding" align="left" style="margin:0 -16px 8px -16px">
+            <div class="half">
+              <input class="input border" type="text" placeholder="Name" required name="Name">
+            </div>
+            <div class="half">
+              <input class="input border" type="text" placeholder="Email" required name="Email">
+            </div>
+          </div>
+          <input class="input border" type="text" placeholder="Message" required name="Message">
+          <button class="button black section right" type="submit">SEND</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  </div>
+<!-- End Page Content -->
+</div>
+
+<!-- Footer -->
+<footer class="container padding-64 center opacity light-grey xlarge">
+  <i class="fa fa-facebook-official hover-opacity"></i>
+  <i class="fa fa-instagram hover-opacity"></i>
+  <i class="fa fa-snapchat hover-opacity"></i>
+  <i class="fa fa-pinterest-p hover-opacity"></i>
+  <i class="fa fa-twitter hover-opacity"></i>
+  <i class="fa fa-linkedin hover-opacity"></i>
+  <p class="medium">All right Reserved<br><i>"Parking On Rent"</i> &nbsp;</p>
+</footer>
+
+<script>
+// Automatic Slideshow - change image every 4 seconds
+var myIndex = 0;
+carousel();
+
+function carousel() {
+    var i;
+    var x = document.getElementsByClassName("mySlides");
+    for (i = 0; i < x.length; i++) {
+       x[i].style.display = "none";  
+    }
+    myIndex++;
+    if (myIndex > x.length) {myIndex = 1}    
+    x[myIndex-1].style.display = "block";  
+    setTimeout(carousel, 4000);    
+}
+
+// Used to toggle the menu on small screens when clicking on the menu button
+function myFunction() {
+    var x = document.getElementById("navDemo");
+    if (x.className.indexOf("show") == -1) {
+        x.className += " show";
+    } else { 
+        x.className = x.className.replace(" show", "");
+    }
+}
+</script>
+
+
+
+
+<script>
+	$('a[href*="#"]')
+  // Remove links that don't actually link to anything
+  .not('[href="#"]')
+  .not('[href="#0"]')
+  .click(function(event) {
+    // On-page links
+    if (
+      location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') 
+      && 
+      location.hostname == this.hostname
+    ) {
+      // Figure out element to scroll to
+      var target = $(this.hash);
+      target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+      // Does a scroll target exist?
+      if (target.length) {
+        // Only prevent default if animation is actually gonna happen
+        event.preventDefault();
+        $('html, body').animate({
+          scrollTop: target.offset().top
+        }, 1000, function() {
+          // Callback after animation
+          // Must change focus!
+          var $target = $(target);
+          $target.focus();
+          if ($target.is(":focus")) { // Checking if the target was focused
+            return false;
+          } else {
+            $target.attr('tabindex','-1'); // Adding tabindex for elements not focusable
+            $target.focus(); // Set focus again
+          };
+        });
+      }
+    }
+  });
+  </script>
+	
+
+</body>
+</html>
